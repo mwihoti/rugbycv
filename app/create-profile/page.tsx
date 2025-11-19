@@ -16,23 +16,23 @@ export default function CreateProfilePage() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 flex items-center justify-center">
-        <div className="text-white">Loading...</div>
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-100 flex items-center justify-center">
+        <div className="text-gray-900">Loading...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
-      <nav className="bg-gray-900 shadow-lg">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-100">
+      <nav className="bg-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/">
-            <div className="text-2xl font-bold text-green-500 cursor-pointer">RugbyCV Kenya</div>
+            <div className="text-2xl font-bold text-green-600 cursor-pointer">RugbyCV Kenya</div>
           </Link>
           <div className="space-x-4 flex items-center">
-            <Link href="/" className="text-white hover:text-green-500 transition">Home</Link>
-            <Link href="/jobs" className="text-white hover:text-green-500 transition">Jobs</Link>
-            <Link href="/my-profile" className="text-white hover:text-green-500 transition">My Profile</Link>
+            <Link href="/" className="text-gray-900 hover:text-green-600 transition">Home</Link>
+            <Link href="/jobs" className="text-gray-900 hover:text-green-600 transition">Jobs</Link>
+            <Link href="/my-profile" className="text-gray-900 hover:text-green-600 transition">My Profile</Link>
             <ConnectWallet />
           </div>
         </div>
@@ -41,9 +41,9 @@ export default function CreateProfilePage() {
       <section className="max-w-7xl mx-auto px-4 py-16">
         {!isConnected ? (
           <div className="max-w-2xl mx-auto text-center">
-            <div className="bg-gray-700 p-12 rounded-lg border border-gray-600">
-              <h2 className="text-3xl font-bold text-white mb-6">Connect Your Wallet</h2>
-              <p className="text-gray-300 mb-8">
+            <div className="bg-white p-12 rounded-lg border border-gray-300">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">Connect Your Wallet</h2>
+              <p className="text-gray-600 mb-8">
                 To create your RugbyCV profile, you need to connect your MetaMask wallet first. 
                 This ensures your profile is owned and verified on the blockchain.
               </p>

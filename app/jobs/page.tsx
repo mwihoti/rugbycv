@@ -239,18 +239,18 @@ export default function JobsPage() {
     : mockJobs;
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-100">
       {/* Navigation */}
-      <nav className="bg-gray-900 shadow-lg">
+      <nav className="bg-white shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
           <Link href="/">
-            <div className="text-2xl font-bold text-green-500 cursor-pointer">RugbyCV Kenya</div>
+            <div className="text-2xl font-bold text-green-600 cursor-pointer">RugbyCV Kenya</div>
           </Link>
           <div className="space-x-4 flex items-center">
-            <Link href="/" className="text-white hover:text-green-500 transition">Home</Link>
-            <Link href="/jobs" className="text-white hover:text-green-500 transition">Jobs</Link>
-            <Link href="/my-profile" className="text-white hover:text-green-500 transition">My Profile</Link>
-            <Link href="/create-profile" className="text-white hover:text-green-500 transition">Create Profile</Link>
+            <Link href="/" className="text-gray-900 hover:text-green-600 transition">Home</Link>
+            <Link href="/jobs" className="text-gray-900 hover:text-green-600 transition">Jobs</Link>
+            <Link href="/my-profile" className="text-gray-900 hover:text-green-600 transition">My Profile</Link>
+            <Link href="/create-profile" className="text-gray-900 hover:text-green-600 transition">Create Profile</Link>
             <ConnectWallet />
           </div>
         </div>
@@ -259,7 +259,7 @@ export default function JobsPage() {
       {/* Main Content */}
       {!mounted ? (
         <section className="max-w-7xl mx-auto px-4 py-16 text-center">
-          <p className="text-white">Loading...</p>
+          <p className="text-gray-900">Loading...</p>
         </section>
       ) : (
         <section className="max-w-7xl mx-auto px-4 py-16">
@@ -268,25 +268,25 @@ export default function JobsPage() {
           {isConnected && (
             <div className="lg:col-span-1">
               {loadingProfile ? (
-                <div className="bg-gray-700 p-6 rounded-lg border border-gray-600 text-center">
-                  <p className="text-gray-300">Loading profile...</p>
+                <div className="bg-white p-6 rounded-lg border border-gray-300 text-center">
+                  <p className="text-gray-600">Loading profile...</p>
                 </div>
               ) : userProfile ? (
-                <div className="bg-gray-700 p-6 rounded-lg border border-green-500 sticky top-20">
+                <div className="bg-white p-6 rounded-lg border border-green-500 sticky top-20">
                   <div className="mb-6">
                     <div className="w-full h-24 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg mb-4"></div>
-                    <h3 className="text-2xl font-bold text-white">{userProfile.name}</h3>
-                    <p className="text-green-400 font-semibold">{userProfile.position}</p>
+                    <h3 className="text-2xl font-bold text-gray-900">{userProfile.name}</h3>
+                    <p className="text-green-600 font-semibold">{userProfile.position}</p>
                   </div>
 
-                  <div className="space-y-4 mb-6 pb-6 border-b border-gray-600">
+                  <div className="space-y-4 mb-6 pb-6 border-b border-gray-200">
                     <div>
-                      <p className="text-gray-400 text-xs uppercase">Height</p>
-                      <p className="text-white font-semibold">{userProfile.height} cm</p>
+                      <p className="text-gray-500 text-xs uppercase">Height</p>
+                      <p className="text-gray-900 font-semibold">{userProfile.height} cm</p>
                     </div>
                     <div>
-                      <p className="text-gray-400 text-xs uppercase">Weight</p>
-                      <p className="text-white font-semibold">{userProfile.weight} kg</p>
+                      <p className="text-gray-500 text-xs uppercase">Weight</p>
+                      <p className="text-gray-900 font-semibold">{userProfile.weight} kg</p>
                     </div>
                     <div>
                       <p className="text-gray-400 text-xs uppercase">Current Status</p>
@@ -315,25 +315,25 @@ export default function JobsPage() {
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-2">
-                      <div className="bg-gray-600 p-3 rounded text-center">
-                        <p className="text-gray-400 text-xs">Pass %</p>
-                        <p className="text-white font-bold">92%</p>
+                      <div className="bg-gray-200 p-3 rounded text-center">
+                        <p className="text-gray-600 text-xs">Pass %</p>
+                        <p className="text-gray-900 font-bold">92%</p>
                       </div>
-                      <div className="bg-gray-600 p-3 rounded text-center">
-                        <p className="text-gray-400 text-xs">Rucks</p>
-                        <p className="text-white font-bold">45</p>
+                      <div className="bg-gray-200 p-3 rounded text-center">
+                        <p className="text-gray-600 text-xs">Rucks</p>
+                        <p className="text-gray-900 font-bold">45</p>
                       </div>
                     </div>
                   </div>
 
-                  <Link href="/my-profile" className="block mt-6 w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-semibold text-center text-sm transition">
+                  <Link href="/my-profile" className="block mt-6 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold text-center text-sm transition">
                     View Full Profile
                   </Link>
                 </div>
               ) : (
-                <div className="bg-gray-700 p-6 rounded-lg border border-gray-600">
-                  <p className="text-gray-300 mb-4">No profile created yet</p>
-                  <Link href="/create-profile" className="block w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg font-semibold text-center text-sm transition">
+                <div className="bg-white p-6 rounded-lg border border-gray-300">
+                  <p className="text-gray-600 mb-4">No profile created yet</p>
+                  <Link href="/create-profile" className="block w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg font-semibold text-center text-sm transition">
                     Create Profile
                   </Link>
                 </div>
@@ -356,8 +356,8 @@ export default function JobsPage() {
             </div>
 
             {!isConnected && (
-              <div className="bg-blue-900 border border-blue-700 p-6 rounded-lg mb-8">
-                <p className="text-blue-100 mb-4">
+              <div className="bg-blue-100 border border-blue-300 p-6 rounded-lg mb-8">
+                <p className="text-blue-900 mb-4">
                   Connect your wallet to apply for jobs and track applications on the blockchain.
                 </p>
                 <ConnectWallet />
@@ -365,13 +365,13 @@ export default function JobsPage() {
             )}
 
             {errorMessage && (
-              <div className="bg-red-600 text-white p-4 rounded-lg mb-6">
+              <div className="bg-red-100 text-red-900 p-4 rounded-lg mb-6">
                 <p className="text-sm">{errorMessage}</p>
               </div>
             )}
 
             {hash && !isSuccess && (
-              <div className="bg-blue-600 text-white p-4 rounded-lg mb-6">
+              <div className="bg-blue-100 text-blue-900 p-4 rounded-lg mb-6">
                 <p className="text-sm font-semibold mb-1">Application Submitted</p>
                 <p className="text-xs">
                   Transaction: <a href={`https://moonbase.moonscan.io/tx/${hash}`} target="_blank" rel="noopener noreferrer" className="underline">
@@ -382,28 +382,28 @@ export default function JobsPage() {
             )}
 
             {isSuccess && (
-              <div className="bg-green-600 text-white p-4 rounded-lg mb-6">
+              <div className="bg-green-100 text-green-900 p-4 rounded-lg mb-6">
                 <p className="text-sm font-semibold">✓ Job application confirmed on blockchain!</p>
               </div>
             )}
 
             {/* Stats Dashboard */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
-              <div className="bg-gray-700 p-6 rounded-lg">
-                <p className="text-gray-400 text-sm">Open Positions</p>
-                <p className="text-3xl font-bold text-white">{mockJobs.length}</p>
+              <div className="bg-white p-6 rounded-lg border border-gray-200">
+                <p className="text-gray-600 text-sm">Open Positions</p>
+                <p className="text-3xl font-bold text-gray-900">{mockJobs.length}</p>
               </div>
-              <div className="bg-gray-700 p-6 rounded-lg">
-                <p className="text-gray-400 text-sm">Total Applications</p>
-                <p className="text-3xl font-bold text-white">{mockJobs.reduce((acc, job) => acc + job.applications, 0)}</p>
+              <div className="bg-white p-6 rounded-lg border border-gray-200">
+                <p className="text-gray-600 text-sm">Total Applications</p>
+                <p className="text-3xl font-bold text-gray-900">{mockJobs.reduce((acc, job) => acc + job.applications, 0)}</p>
               </div>
-              <div className="bg-gray-700 p-6 rounded-lg">
-                <p className="text-gray-400 text-sm">Clubs Hiring</p>
-                <p className="text-3xl font-bold text-white">{new Set(mockJobs.map(j => j.club)).size}</p>
+              <div className="bg-white p-6 rounded-lg border border-gray-200">
+                <p className="text-gray-600 text-sm">Clubs Hiring</p>
+                <p className="text-3xl font-bold text-gray-900">{new Set(mockJobs.map(j => j.club)).size}</p>
               </div>
-              <div className="bg-gray-700 p-6 rounded-lg">
-                <p className="text-gray-400 text-sm">Salary Range</p>
-                <p className="text-2xl font-bold text-green-500">380K - 500K KES</p>
+              <div className="bg-white p-6 rounded-lg border border-gray-200">
+                <p className="text-gray-600 text-sm">Salary Range</p>
+                <p className="text-2xl font-bold text-green-600">380K - 500K KES</p>
               </div>
             </div>
 
