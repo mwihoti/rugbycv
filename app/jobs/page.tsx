@@ -100,26 +100,47 @@ export default function JobsPage() {
       const data = await response.json();
 
       if (data.result && Array.isArray(data.result)) {
+        console.log('Transactions found:', data.result.length);
+        console.log('Profile address:', PROFILE_ADDRESS);
+        
         // Look for transactions to the profile contract with createProfile function
         const profileSelector = getCreateProfileSelector();
-        const profileTxs = data.result.filter((tx: any) => 
-          tx.to?.toLowerCase() === PROFILE_ADDRESS.toLowerCase() &&
-          tx.isError === '0' &&
-          tx.input?.toLowerCase().startsWith(profileSelector.toLowerCase())
-        );
+        console.log('Looking for function selector:', profileSelector);
+        
+        const profileTxs = data.result.filter((tx: any) => {
+          const isToProfile = tx.to?.toLowerCase() === PROFILE_ADDRESS.toLowerCase();
+          const isSuccess = tx.isError === '0';
+          const isCreateProfile = tx.input?.toLowerCase().startsWith(profileSelector.toLowerCase());
+          
+          if (isToProfile) {
+            console.log('Found tx to profile:', {
+              hash: tx.hash,
+              isSuccess,
+              inputStart: tx.input?.slice(0, 10),
+              expectedStart: profileSelector,
+              isCreateProfile
+            });
+          }
+          
+          return isToProfile && isSuccess && isCreateProfile;
+        });
+
+        console.log('Profile txs found:', profileTxs.length);
 
         if (profileTxs.length > 0) {
           const latestTx = profileTxs[0];
+          console.log('Decoding transaction:', latestTx.hash);
           
           // Decode the transaction input
           if (latestTx.input && latestTx.input.startsWith('0x')) {
             try {
               const decodedProfile = decodeCreateProfileInput(latestTx.input as `0x${string}`);
+              console.log('Decoded profile:', decodedProfile);
               
               if (decodedProfile) {
                 setUserProfile(decodedProfile);
               } else {
-                // Fallback if decoding fails
+                console.log('Decoding returned null');
                 setUserProfile({
                   name: 'Profile Created',
                   position: 'Rugby Player',
@@ -215,8 +236,13 @@ export default function JobsPage() {
       </nav>
 
       {/* Main Content */}
-      <section className="max-w-7xl mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      {!mounted ? (
+        <section className="max-w-7xl mx-auto px-4 py-16 text-center">
+          <p className="text-white">Loading...</p>
+        </section>
+      ) : (
+        <section className="max-w-7xl mx-auto px-4 py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Left Sidebar - User Profile */}
           {isConnected && (
             <div className="lg:col-span-1">
@@ -418,7 +444,10 @@ export default function JobsPage() {
         )}
           </div>
         </div>
-      </section>      {/* Application Confirmation Modal */}
+        </section>
+      )}
+
+      {/* Application Confirmation Modal */}
       {selectedJob && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-gray-700 rounded-lg p-8 max-w-md w-full">
