@@ -1,4 +1,4 @@
-import { decodeAbiParameters, parseAbiParameters } from 'viem';
+import { decodeAbiParameters, parseAbiParameters, keccak256, toHex } from 'viem';
 
 /**
  * Decode transaction input for createProfile function
@@ -42,9 +42,12 @@ export function decodeCreateProfileInput(input: `0x${string}`) {
 
 /**
  * Get the function selector for createProfile
- * This helps identify createProfile transactions
+ * Calculates keccak256 hash of "createProfile(string,string,uint256,uint256,string,string,bool,string)"
  */
 export function getCreateProfileSelector(): `0x${string}` {
-  // This is the keccak256 hash of "createProfile(string,string,uint256,uint256,string,string,bool,string)"
-  return '0x8c2e246f';
+  // Calculate the function signature hash
+  const functionSig = 'createProfile(string,string,uint256,uint256,string,string,bool,string)';
+  const hash = keccak256(toHex(functionSig));
+  // Return first 4 bytes (8 hex chars)
+  return (hash.slice(0, 10)) as `0x${string}`;
 }

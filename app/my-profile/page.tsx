@@ -47,21 +47,42 @@ export default function MyProfilePage() {
       const data = await response.json();
 
       if (data.result && Array.isArray(data.result)) {
+        console.log('Total transactions:', data.result.length);
+        console.log('Profile address:', PROFILE_ADDRESS);
+        
         // Look for createProfile transactions
         const profileSelector = getCreateProfileSelector();
-        const profileTxs = data.result.filter((tx: any) => 
-          tx.to?.toLowerCase() === PROFILE_ADDRESS.toLowerCase() &&
-          tx.isError === '0' &&
-          tx.input?.toLowerCase().startsWith(profileSelector.toLowerCase())
-        );
+        console.log('Function selector:', profileSelector);
+        
+        const profileTxs = data.result.filter((tx: any) => {
+          const isToProfile = tx.to?.toLowerCase() === PROFILE_ADDRESS.toLowerCase();
+          const isSuccess = tx.isError === '0';
+          const hasInput = !!tx.input;
+          const isCreateProfile = tx.input?.toLowerCase().startsWith(profileSelector.toLowerCase());
+          
+          if (isToProfile && hasInput) {
+            console.log('TX to profile contract:', {
+              hash: tx.hash,
+              inputStart: tx.input?.slice(0, 10),
+              isSuccess,
+              isCreateProfile
+            });
+          }
+          
+          return isToProfile && isSuccess && isCreateProfile;
+        });
+
+        console.log('Profile transactions found:', profileTxs.length);
 
         if (profileTxs.length > 0) {
           const latestTx = profileTxs[0];
+          console.log('Latest profile TX:', latestTx.hash);
           
           // Decode the transaction input
           if (latestTx.input && latestTx.input.startsWith('0x')) {
             try {
               const decodedProfile = decodeCreateProfileInput(latestTx.input as `0x${string}`);
+              console.log('Decoded profile:', decodedProfile);
               
               if (decodedProfile) {
                 setProfile({
