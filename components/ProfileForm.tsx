@@ -17,8 +17,8 @@ interface ProfileFormData {
 }
 
 export default function ProfileForm() {
-  const { register, handleSubmit, formState: { errors } } = useForm<ProfileFormData>();
-  const { isConnected } = useAccount();
+  const { register, handleSubmit, formState: { errors }, getValues } = useForm<ProfileFormData>();
+  const { isConnected, address } = useAccount();
   const { writeContract, isPending, data: hash } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
   const [errorMessage, setErrorMessage] = useState('');
@@ -26,13 +26,33 @@ export default function ProfileForm() {
 
   useEffect(() => {
     if (isSuccess) {
+      // Store profile data in localStorage for quick retrieval
+      const profileData = {
+        name: (getValues('name') || '').toString(),
+        position: (getValues('position') || '').toString(),
+        height: Number(getValues('height') || 0),
+        weight: Number(getValues('weight') || 0),
+        secondJob: (getValues('secondJob') || '').toString(),
+        injuryStatus: (getValues('injuryStatus') || '').toString(),
+        availableForTransfer: getValues('availableForTransfer') || false,
+        videoHash: (getValues('videoHash') || '').toString(),
+        transactionHash: hash,
+        createdAt: new Date().toISOString(),
+      };
+      
+      // Store in localStorage with wallet address as key
+      if (address) {
+        localStorage.setItem(`profile_${address}`, JSON.stringify(profileData));
+        console.log('Profile saved to localStorage:', profileData);
+      }
+      
       // Redirect to my profile page after 3 seconds
       const timer = setTimeout(() => {
         router.push('/my-profile');
       }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [isSuccess, router]);
+  }, [isSuccess, router, address, getValues, hash]);
 
   const onSubmit = async (data: ProfileFormData) => {
     setErrorMessage('');

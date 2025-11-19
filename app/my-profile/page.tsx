@@ -40,6 +40,20 @@ export default function MyProfilePage() {
     setLoading(true);
     setError('');
     try {
+      // First, check localStorage for recently created profile
+      const cachedProfile = localStorage.getItem(`profile_${walletAddress}`);
+      if (cachedProfile) {
+        try {
+          const profileData = JSON.parse(cachedProfile);
+          console.log('Profile found in localStorage:', profileData);
+          setProfile(profileData);
+          setLoading(false);
+          return;
+        } catch (e) {
+          console.log('Could not parse cached profile');
+        }
+      }
+      
       // Fetch transactions to find profile creation
       const response = await fetch(
         `https://api-moonbase.moonscan.io/api?module=account&action=txlist&address=${walletAddress}&startblock=0&endblock=99999999&sort=desc&apikey=abc`
@@ -85,11 +99,14 @@ export default function MyProfilePage() {
               console.log('Decoded profile:', decodedProfile);
               
               if (decodedProfile) {
-                setProfile({
+                const fullProfile = {
                   ...decodedProfile,
                   transactionHash: latestTx.hash,
                   createdAt: new Date(Number(latestTx.timeStamp) * 1000).toLocaleDateString(),
-                });
+                };
+                setProfile(fullProfile);
+                // Cache it
+                localStorage.setItem(`profile_${walletAddress}`, JSON.stringify(fullProfile));
               } else {
                 setError('Profile found but could not decode data.');
               }

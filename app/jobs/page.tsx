@@ -93,6 +93,20 @@ export default function JobsPage() {
   const fetchUserProfile = async (walletAddress: string) => {
     setLoadingProfile(true);
     try {
+      // First, check localStorage for recently created profile
+      const cachedProfile = localStorage.getItem(`profile_${walletAddress}`);
+      if (cachedProfile) {
+        try {
+          const profileData = JSON.parse(cachedProfile);
+          console.log('Profile found in localStorage:', profileData);
+          setUserProfile(profileData);
+          setLoadingProfile(false);
+          return;
+        } catch (e) {
+          console.log('Could not parse cached profile');
+        }
+      }
+      
       // Fetch transactions to find profile creation
       const response = await fetch(
         `https://api-moonbase.moonscan.io/api?module=account&action=txlist&address=${walletAddress}&startblock=0&endblock=99999999&sort=desc&apikey=abc`
@@ -138,6 +152,8 @@ export default function JobsPage() {
               if (decodedProfile) {
                 console.log('Profile loaded successfully:', decodedProfile.name);
                 setUserProfile(decodedProfile);
+                // Cache it
+                localStorage.setItem(`profile_${walletAddress}`, JSON.stringify(decodedProfile));
               } else {
                 console.log('Decode returned null, trying fallback');
                 // Fallback: at least show that profile exists
