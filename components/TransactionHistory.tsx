@@ -38,13 +38,22 @@ export default function TransactionHistory() {
     setLoading(true);
     setError('');
     try {
-      // Using Moonbase Alpha's public RPC and block explorer API
+      // Try Moonscan API first
       const moonscanUrl = `https://api-moonbase.moonscan.io/api?module=account&action=txlist&address=${walletAddress}&startblock=0&endblock=99999999&sort=desc&apikey=abc`;
+      
+      console.log('Fetching transactions for:', walletAddress);
       
       const response = await fetch(moonscanUrl);
       const data = await response.json();
 
-      if (data.status === '1' && data.result) {
+      console.log('API Response:', {
+        status: data.status,
+        message: data.message,
+        resultCount: Array.isArray(data.result) ? data.result.length : 'not an array'
+      });
+
+      // Check if we have valid results
+      if (data.result && Array.isArray(data.result) && data.result.length > 0) {
         const txs: Transaction[] = data.result
           .slice(0, 20) // Limit to 20 most recent
           .map((tx: any) => ({
@@ -61,13 +70,19 @@ export default function TransactionHistory() {
             functionName: getFunctionName(tx.input?.slice(0, 10) || ''),
             type: determineTxType(tx.from, tx.to, walletAddress),
           }));
+        console.log('Successfully loaded', txs.length, 'transactions');
         setTransactions(txs);
       } else {
+        console.log('No transaction data in response');
         setTransactions([]);
+        // Only set error if API explicitly errored
+        if (data.status !== '1' && data.message) {
+          setError(`API: ${data.message}`);
+        }
       }
     } catch (err) {
       console.error('Error fetching transactions:', err);
-      setError('Failed to fetch transactions. Please try again.');
+      setError('Failed to fetch transactions. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -132,7 +147,14 @@ export default function TransactionHistory() {
         </div>
       ) : transactions.length === 0 ? (
         <div className="text-center py-8">
-          <p className="text-gray-400">No transactions found</p>
+          <p className="text-gray-400 text-sm">No transactions found</p>
+          <p className="text-gray-500 text-xs mt-2">Transactions may take a moment to appear on Moonscan</p>
+          <button
+            onClick={() => address && fetchTransactions(address)}
+            className="mt-4 text-green-500 hover:text-green-400 text-xs underline"
+          >
+            Try refreshing again
+          </button>
         </div>
       ) : (
         <div className="overflow-x-auto">
