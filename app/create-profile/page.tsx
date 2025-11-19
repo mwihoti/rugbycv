@@ -32,7 +32,7 @@ export default function CreateProfilePage() {
           <div className="space-x-4 flex items-center">
             <Link href="/" className="text-white hover:text-green-500 transition">Home</Link>
             <Link href="/jobs" className="text-white hover:text-green-500 transition">Jobs</Link>
-            <Link href="/profile/1" className="text-white hover:text-green-500 transition">Profiles</Link>
+            <Link href="/my-profile" className="text-white hover:text-green-500 transition">My Profile</Link>
             <ConnectWallet />
           </div>
         </div>

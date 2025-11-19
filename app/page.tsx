@@ -124,6 +124,9 @@ export default function Page() {
           <a className="text-sm hover:underline" href="#profiles">
             Profiles
           </a>
+          <Link href="/my-profile" className="text-sm hover:underline">
+            My Profile
+          </Link>
           <ConnectWallet />
           <Link href="/create-profile">
             <button className="ml-2 rounded-md bg-indigo-600 text-white text-sm px-3 py-2 shadow hover:bg-indigo-700">
@@ -326,40 +329,7 @@ export default function Page() {
           </div>
         </section>
 
-        {/* Roadmap */}
-        <section className="mt-12 bg-white p-6 rounded-xl shadow-sm">
-          <h3 className="text-2xl font-bold">Roadmap</h3>
-          <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-            <div>
-              <h5 className="font-semibold">Phase 1: MVP (Jan 2026)</h5>
-              <ul className="mt-2 text-gray-600 space-y-1">
-                <li>✓ 1,000 player profiles on Moonbase</li>
-                <li>✓ Mainnet deployment Q1 2026</li>
-                <li>✓ Club partnerships</li>
-                <li>✓ National team players onboarded</li>
-              </ul>
-            </div>
-
-            <div>
-              <h5 className="font-semibold">Phase 2: Growth (2026/27)</h5>
-              <ul className="mt-2 text-gray-600 space-y-1">
-                <li>✓ Payment delay detection</li>
-                <li>✓ Sponsor marketplace</li>
-                <li>✓ Live scoring integration</li>
-              </ul>
-            </div>
-
-            <div>
-              <h5 className="font-semibold">Phase 3: Scale (2027+)</h5>
-              <ul className="mt-2 text-gray-600 space-y-1">
-                <li>✓ Cross-border talent</li>
-                <li>✓ Scholarship portal</li>
-                <li>✓ Micropayments for views</li>
-              </ul>
-            </div>
-          </div>
-        </section>
-
+      
         {/* CTA */}
         <section className="mt-10 flex items-center justify-center">
           <div className="bg-indigo-700 text-white px-8 py-6 rounded-2xl shadow-lg text-center max-w-2xl">

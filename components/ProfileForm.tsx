@@ -1,7 +1,8 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useRouter } from 'next/navigation';
 import { PROFILE_ADDRESS, profileAbi } from '@/lib/contracts';
 
 interface ProfileFormData {
@@ -21,6 +22,17 @@ export default function ProfileForm() {
   const { writeContract, isPending, data: hash } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
   const [errorMessage, setErrorMessage] = useState('');
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isSuccess) {
+      // Redirect to my profile page after 3 seconds
+      const timer = setTimeout(() => {
+        router.push('/my-profile');
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isSuccess, router]);
 
   const onSubmit = async (data: ProfileFormData) => {
     setErrorMessage('');
@@ -117,11 +129,17 @@ export default function ProfileForm() {
           </div>
 
           <div className="space-y-3">
+            <button
+              onClick={() => router.push('/my-profile')}
+              className="block w-full bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg font-bold transition text-center"
+            >
+              View Your Profile →
+            </button>
             <a
               href="/jobs"
-              className="inline-block w-full bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-lg font-bold transition text-center"
+              className="inline-block w-full bg-green-700 hover:bg-green-800 text-white px-8 py-3 rounded-lg font-bold transition text-center"
             >
-              Explore Job Board →
+              Explore Job Board
             </a>
             <a
               href="/"
@@ -131,7 +149,10 @@ export default function ProfileForm() {
             </a>
           </div>
 
-          <p className="text-gray-400 text-xs mt-8">
+          <p className="text-gray-300 text-xs mt-6">
+            Redirecting to your profile in 3 seconds...
+          </p>
+          <p className="text-gray-400 text-xs mt-2">
             Your profile has been permanently stored on the blockchain
           </p>
         </div>
