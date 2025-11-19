@@ -100,36 +100,41 @@ export default function JobsPage() {
       const data = await response.json();
 
       if (data.result && Array.isArray(data.result)) {
-        console.log('Transactions found:', data.result.length);
-        console.log('Profile address:', PROFILE_ADDRESS);
+        console.log(`=== Profile Fetch Debug for ${walletAddress} ===`);
+        console.log('Total transactions:', data.result.length);
+        console.log('Profile address target:', PROFILE_ADDRESS);
         
-        // Look for transactions to the profile contract with createProfile function
+        // First, show all transactions to the profile contract
+        const allProfileTxs = data.result.filter((tx: any) => 
+          tx.to?.toLowerCase() === PROFILE_ADDRESS.toLowerCase()
+        );
+        console.log('Transactions to profile contract:', allProfileTxs.length);
+        allProfileTxs.forEach((tx: any, idx: number) => {
+          console.log(`  [${idx}]`, {
+            hash: tx.hash,
+            isError: tx.isError,
+            input: tx.input?.slice(0, 10),
+            functionName: tx.functionName
+          });
+        });
+        
+        // Look for createProfile transactions
         const profileSelector = getCreateProfileSelector();
         console.log('Looking for function selector:', profileSelector);
         
         const profileTxs = data.result.filter((tx: any) => {
           const isToProfile = tx.to?.toLowerCase() === PROFILE_ADDRESS.toLowerCase();
           const isSuccess = tx.isError === '0';
-          const isCreateProfile = tx.input?.toLowerCase().startsWith(profileSelector.toLowerCase());
+          const startsWithSelector = tx.input?.toLowerCase().startsWith(profileSelector.toLowerCase());
           
-          if (isToProfile) {
-            console.log('Found tx to profile:', {
-              hash: tx.hash,
-              isSuccess,
-              inputStart: tx.input?.slice(0, 10),
-              expectedStart: profileSelector,
-              isCreateProfile
-            });
-          }
-          
-          return isToProfile && isSuccess && isCreateProfile;
+          return isToProfile && isSuccess && startsWithSelector;
         });
 
-        console.log('Profile txs found:', profileTxs.length);
+        console.log('Matching createProfile transactions:', profileTxs.length);
 
         if (profileTxs.length > 0) {
           const latestTx = profileTxs[0];
-          console.log('Decoding transaction:', latestTx.hash);
+          console.log('Decoding TX:', latestTx.hash);
           
           // Decode the transaction input
           if (latestTx.input && latestTx.input.startsWith('0x')) {
@@ -140,7 +145,7 @@ export default function JobsPage() {
               if (decodedProfile) {
                 setUserProfile(decodedProfile);
               } else {
-                console.log('Decoding returned null');
+                console.log('Decoding returned null, setting default');
                 setUserProfile({
                   name: 'Profile Created',
                   position: 'Rugby Player',
@@ -153,7 +158,7 @@ export default function JobsPage() {
                 });
               }
             } catch (decodeErr) {
-              console.error('Error decoding transaction:', decodeErr);
+              console.error('Decode error:', decodeErr);
               setUserProfile({
                 name: 'Profile Created',
                 position: 'Rugby Player',
@@ -166,6 +171,8 @@ export default function JobsPage() {
               });
             }
           }
+        } else {
+          console.log('No matching profile transactions found');
         }
       }
     } catch (err) {

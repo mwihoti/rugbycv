@@ -1,4 +1,5 @@
-import { decodeAbiParameters, parseAbiParameters, keccak256, toHex } from 'viem';
+import { decodeAbiParameters, parseAbiParameters, keccak256, toHex, getAbiItem } from 'viem';
+import { profileAbi } from './contracts';
 
 /**
  * Decode transaction input for createProfile function
@@ -42,12 +43,36 @@ export function decodeCreateProfileInput(input: `0x${string}`) {
 
 /**
  * Get the function selector for createProfile
- * Calculates keccak256 hash of "createProfile(string,string,uint256,uint256,string,string,bool,string)"
+ * Uses the ABI to calculate the correct selector
  */
 export function getCreateProfileSelector(): `0x${string}` {
-  // Calculate the function signature hash
+  try {
+    // Get createProfile function from ABI
+    const createProfileAbi = getAbiItem({
+      abi: profileAbi as any,
+      name: 'createProfile',
+    });
+    
+    if (createProfileAbi && createProfileAbi.type === 'function') {
+      // Calculate function signature
+      const params = createProfileAbi.inputs
+        .map(input => input.type)
+        .join(',');
+      const sig = `createProfile(${params})`;
+      console.log('Function signature:', sig);
+      
+      // Get selector
+      const hash = keccak256(toHex(sig));
+      const selector = hash.slice(0, 10) as `0x${string}`;
+      console.log('Calculated selector:', selector);
+      return selector;
+    }
+  } catch (error) {
+    console.error('Error calculating selector from ABI:', error);
+  }
+  
+  // Fallback to manual calculation
   const functionSig = 'createProfile(string,string,uint256,uint256,string,string,bool,string)';
   const hash = keccak256(toHex(functionSig));
-  // Return first 4 bytes (8 hex chars)
   return (hash.slice(0, 10)) as `0x${string}`;
 }
