@@ -1,0 +1,4 @@
+hardhat.config.ts
+dist/
+.next/
+node_modules/

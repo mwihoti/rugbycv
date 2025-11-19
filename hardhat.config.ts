@@ -11,6 +11,7 @@ const config: HardhatUserConfig = {
     }
   },
   networks: {
+    hardhat: {},
     moonbase: {
       url: "https://rpc.api.moonbase.moonbeam.network",
       chainId: 1287,
