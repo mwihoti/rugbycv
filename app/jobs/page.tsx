@@ -253,7 +253,7 @@ export default function JobsPage() {
 
                   <div className="space-y-2">
                     <h4 className="text-white font-semibold text-sm">Career Stats</h4>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-3 gap-2 mb-2">
                       <div className="bg-gray-600 p-3 rounded text-center">
                         <p className="text-gray-400 text-xs">Tries</p>
                         <p className="text-white font-bold">12</p>
@@ -266,9 +266,15 @@ export default function JobsPage() {
                         <p className="text-gray-400 text-xs">Assists</p>
                         <p className="text-white font-bold">23</p>
                       </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
                       <div className="bg-gray-600 p-3 rounded text-center">
                         <p className="text-gray-400 text-xs">Pass %</p>
                         <p className="text-white font-bold">92%</p>
+                      </div>
+                      <div className="bg-gray-600 p-3 rounded text-center">
+                        <p className="text-gray-400 text-xs">Rucks</p>
+                        <p className="text-white font-bold">45</p>
                       </div>
                     </div>
                   </div>
