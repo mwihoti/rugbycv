@@ -47,7 +47,7 @@ export default function MyProfile() {
       
       // Check if any transactions exist for profile creation
       const response = await fetch(
-        `https://api-moonbase.moonscan.io/api?module=account&action=txlist&address=${walletAddress}&startblock=0&endblock=99999999&sort=desc&apikey=abc`
+        `https://api-moonbase.moonscan.io/api?module=account&action=txlist&address=${walletAddress}&startblock=0&endblock=99999999&sort=desc`
       );
       const data = await response.json();
 

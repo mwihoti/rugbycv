@@ -50,7 +50,7 @@ export default function MyProfilePage() {
   const fetchBlockData = async (blockNumber: number) => {
     try {
       const response = await fetch(
-        `https://api-moonbase.moonscan.io/api?module=proxy&action=eth_getBlockByNumber&tag=0x${blockNumber.toString(16)}&boolean=true&apikey=abc`
+        `https://api-moonbase.moonscan.io/api?module=proxy&action=eth_getBlockByNumber&tag=0x${blockNumber.toString(16)}&boolean=true`
       );
       
       if (!response.ok) throw new Error('Failed to fetch block data');
@@ -98,7 +98,7 @@ export default function MyProfilePage() {
       
       // Fetch transactions to find profile creation
       const response = await fetch(
-        `https://api-moonbase.moonscan.io/api?module=account&action=txlist&address=${walletAddress}&startblock=0&endblock=99999999&sort=desc&apikey=abc`
+        `https://api-moonbase.moonscan.io/api?module=account&action=txlist&address=${walletAddress}&startblock=0&endblock=99999999&sort=desc`
       );
       const data = await response.json();
 

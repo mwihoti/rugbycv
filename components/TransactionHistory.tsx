@@ -39,7 +39,7 @@ export default function TransactionHistory() {
     setError('');
     try {
       // Try Moonscan API first
-      const moonscanUrl = `https://api-moonbase.moonscan.io/api?module=account&action=txlist&address=${walletAddress}&startblock=0&endblock=99999999&sort=desc&apikey=abc`;
+      const moonscanUrl = `https://api-moonbase.moonscan.io/api?module=account&action=txlist&address=${walletAddress}&startblock=0&endblock=99999999&sort=desc`;
       
       console.log('Fetching transactions for:', walletAddress);
       
