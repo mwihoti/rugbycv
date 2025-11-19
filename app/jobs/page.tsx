@@ -100,52 +100,47 @@ export default function JobsPage() {
       const data = await response.json();
 
       if (data.result && Array.isArray(data.result)) {
-        console.log(`=== Profile Fetch Debug for ${walletAddress} ===`);
+        console.log(`=== Profile Fetch for ${walletAddress} ===`);
         console.log('Total transactions:', data.result.length);
-        console.log('Profile address target:', PROFILE_ADDRESS);
+        console.log('Profile address:', PROFILE_ADDRESS);
         
         // First, show all transactions to the profile contract
         const allProfileTxs = data.result.filter((tx: any) => 
           tx.to?.toLowerCase() === PROFILE_ADDRESS.toLowerCase()
         );
-        console.log('Transactions to profile contract:', allProfileTxs.length);
-        allProfileTxs.forEach((tx: any, idx: number) => {
-          console.log(`  [${idx}]`, {
-            hash: tx.hash,
+        console.log('TXs to profile contract:', allProfileTxs.length);
+        
+        if (allProfileTxs.length > 0) {
+          console.log('Found profile transactions:', allProfileTxs.map((tx: any) => ({
+            hash: tx.hash.slice(0, 10),
             isError: tx.isError,
             input: tx.input?.slice(0, 10),
-            functionName: tx.functionName
-          });
-        });
+            fn: tx.functionName
+          })));
+        }
         
-        // Look for createProfile transactions
-        const profileSelector = getCreateProfileSelector();
-        console.log('Looking for function selector:', profileSelector);
-        
-        const profileTxs = data.result.filter((tx: any) => {
-          const isToProfile = tx.to?.toLowerCase() === PROFILE_ADDRESS.toLowerCase();
-          const isSuccess = tx.isError === '0';
-          const startsWithSelector = tx.input?.toLowerCase().startsWith(profileSelector.toLowerCase());
-          
-          return isToProfile && isSuccess && startsWithSelector;
-        });
+        // Look for successful transactions
+        const successfulTxs = allProfileTxs.filter((tx: any) => tx.isError === '0');
+        console.log('Successful profile TXs:', successfulTxs.length);
 
-        console.log('Matching createProfile transactions:', profileTxs.length);
-
-        if (profileTxs.length > 0) {
-          const latestTx = profileTxs[0];
-          console.log('Decoding TX:', latestTx.hash);
+        if (successfulTxs.length > 0) {
+          // Get the most recent one
+          const latestTx = successfulTxs[0];
+          console.log('Latest successful TX:', latestTx.hash);
+          console.log('TX input:', latestTx.input);
           
-          // Decode the transaction input
+          // Try to decode regardless of function selector
           if (latestTx.input && latestTx.input.startsWith('0x')) {
             try {
               const decodedProfile = decodeCreateProfileInput(latestTx.input as `0x${string}`);
-              console.log('Decoded profile:', decodedProfile);
+              console.log('Decoded result:', decodedProfile);
               
               if (decodedProfile) {
+                console.log('Profile loaded successfully:', decodedProfile.name);
                 setUserProfile(decodedProfile);
               } else {
-                console.log('Decoding returned null, setting default');
+                console.log('Decode returned null, trying fallback');
+                // Fallback: at least show that profile exists
                 setUserProfile({
                   name: 'Profile Created',
                   position: 'Rugby Player',
@@ -159,6 +154,7 @@ export default function JobsPage() {
               }
             } catch (decodeErr) {
               console.error('Decode error:', decodeErr);
+              // Still show that profile exists
               setUserProfile({
                 name: 'Profile Created',
                 position: 'Rugby Player',
@@ -172,8 +168,10 @@ export default function JobsPage() {
             }
           }
         } else {
-          console.log('No matching profile transactions found');
+          console.log('No successful profile transactions found');
         }
+      } else {
+        console.log('No results in API response');
       }
     } catch (err) {
       console.error('Error fetching profile:', err);
