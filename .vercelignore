@@ -1,0 +1,5 @@
+hardhat.config.ts
+contracts/
+deployments/
+scripts/
+test/
