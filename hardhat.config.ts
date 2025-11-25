@@ -11,14 +11,20 @@ const config: HardhatUserConfig = {
     }
   },
   networks: {
-    hardhat: {},
+    hardhat: {
+      chainId: 31337,
+      type: "http" as const,
+      url: "http://127.0.0.1:8545",
+    },
     moonbase: {
+      type: "http" as const,
       url: "https://rpc.api.moonbase.moonbeam.network",
       chainId: 1287,
       accounts: [process.env.PRIVATE_KEY!],
       gasPrice: 1000000000, // 1 gwei
     },
     moonbeam: {
+      type: "http" as const,
       url: "https://rpc.api.moonbeam.network",
       chainId: 1284,
       accounts: [process.env.PRIVATE_KEY!],
